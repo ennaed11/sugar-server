@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import smtplib
 from mailer import Mailer
+import csv
 
 app = Flask(__name__)
 
@@ -18,10 +19,17 @@ def index():
 @app.route('/logs', methods=['POST'])
 def parseLogs():
     data = request.json
-    print(data)
 
-    # do something with data
+    filename = 'blood.csv'
+    with open(filename, 'w+') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow(['value', 'startDate', 'endDate'])
+        for item in data['blood']:
+            writer.writerow([item['value'], item['startDate'], item['endDate']])
+        
+        text = 'Date of Birth: {}\nAge: {}'.format(data['dob']['value'], data['dob']['age'])
+        mailer.sendMessage(['dccaingat@up.edu.ph', 'mfmayol@up.edu.ph'], 'Blood Sugar Report', text, [filename])
 
-    return jsonify({"success": True})
+        return jsonify({"success": True})
 
-app.run()
+app.run(debug=True)
