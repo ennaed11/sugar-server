@@ -27,6 +27,8 @@ def parseLogs():
         for item in data['blood']:
             writer.writerow([item['value'], item['startDate'], item['endDate']])
         
+        f.close()
+        
         text = 'Date of Birth: {}\nAge: {}'.format(data['dob']['value'], data['dob']['age'])
         mailer.sendMessage(['dccaingat@up.edu.ph', 'mfmayol@up.edu.ph'], 'Blood Sugar Report', text, [filename])
 

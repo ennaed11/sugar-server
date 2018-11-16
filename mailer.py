@@ -36,7 +36,7 @@ class Mailer:
         msg = self._createMessage(COMMASPACE.join(send_to), subject, text)
 
         for f in files or []:
-            part = MIMEApplication(open(f).read())
+            part = MIMEApplication(open(f, 'rb').read())
             part.add_header('Content-Disposition', 'attachment; filename="{}"'.format(basename(f)))
             msg.attach(part)
         
