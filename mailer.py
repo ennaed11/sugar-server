@@ -14,8 +14,7 @@ class Mailer:
         self.port = port
     
     def sendMail(self, send_to, msg):
-        server = SMTP(url, port)
-        server = SMTP(url, port)
+        server = SMTP(self.url, self.port)
         server.starttls()
         server.login(self.username, self.password)
         server.sendmail(self.username, send_to, msg)
