@@ -13,14 +13,14 @@ class Mailer:
         self.url = url
         self.port = port
     
-    def sendMail(self, send_to, msg):
+    def _sendMail(self, send_to, msg):
         server = SMTP(self.url, self.port)
         server.starttls()
         server.login(self.username, self.password)
         server.sendmail(self.username, send_to, msg)
         server.close()
     
-    def createMessage(self, send_to, subject, text):
+    def _createMessage(self, send_to, subject, text):
         msg = MIMEMultipart()
         msg['From'] = self.username
         msg['To'] = send_to
@@ -33,12 +33,11 @@ class Mailer:
     def sendMessage(self, send_to, subject, text, files = None):
         assert isinstance(send_to, list)
 
-        msg = self.createMessage(COMMASPACE.join(send_to), subject, text)
+        msg = self._createMessage(COMMASPACE.join(send_to), subject, text)
 
         for f in files or []:
-            with open(f, "rb") as f:
-                part = MIMEApplication(f.read(), Name=basename(f))
-            part['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(f))
+            part = MIMEApplication(open(f).read())
+            part.add_header('Content-Disposition', 'attachment; filename="{}"'.format(basename(f)))
             msg.attach(part)
         
-        self.sendMail(send_to, msg.as_string())
+        self._sendMail(send_to, msg.as_string())
