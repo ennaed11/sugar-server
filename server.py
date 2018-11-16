@@ -1,19 +1,15 @@
 from flask import Flask, request, jsonify
 import smtplib
+from mailer import Mailer
 
 app = Flask(__name__)
 
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
+MAIL_USERNAME = 'cs198199wsg@gmail.com'
+MAIL_PASS = 'p4ssw0rd123.'
+MAIL_URL = 'smtp.gmail.com'
+MAIL_PORT = 587
 
-server = smtplib.SMTP('smtp.gmail.com', 587)
-server.starttls()
-server.login("cs198199wsg@gmail.com", "p4ssw0rd123.")
-
-msg = "Yehey!"
-server.sendmail("cs198199wsg@gmail.com", "dccaingat@up.edu.ph", msg)
-server.quit()
-
+mailer = Mailer(MAIL_USERNAME, MAIL_PASS, MAIL_URL, MAIL_PORT)
 
 @app.route('/')
 def index():
